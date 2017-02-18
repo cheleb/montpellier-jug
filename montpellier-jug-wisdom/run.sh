@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ $# -eq 0 ]; then
+if [[ -z "$EVENTBRITE_TOKEN" ]]; then
    echo "Token must be provided check your email ;)"
    exit 1
 fi

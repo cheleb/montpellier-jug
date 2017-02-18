@@ -19,12 +19,18 @@ import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.apache.http.HttpResponse;
+/*
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.nio.IOControl;
 import org.apache.http.nio.client.methods.AsyncCharConsumer;
 import org.apache.http.nio.client.methods.HttpAsyncMethods;
 import org.apache.http.protocol.HttpContext;
+*/
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +84,7 @@ public class EventBriteService {
 		PipedOutputStream outputStream = new PipedOutputStream();
 		PipedInputStream inputStream = new PipedInputStream(outputStream);
 
+
 		executorService.submit(() -> eventBriteRequest(withToken, new StreamConsumer(outputStream)));
 
 		TypeToken<List<Profile>> typeToken = new TypeToken<List<Profile>>() {
@@ -117,7 +124,7 @@ public class EventBriteService {
 		PipedOutputStream outputStream = new PipedOutputStream();
 		PipedInputStream inputStream = new PipedInputStream(outputStream);
 
-		executorService.submit(() -> eventBriteRequest(withToken, new StreamConsumer(outputStream)));
+		//executorService.submit(() -> eventBriteRequest(withToken, new StreamConsumer(outputStream)));
 
 		TypeToken<List<Event>> typeToken = new TypeToken<List<Event>>() {
 		};
@@ -148,23 +155,16 @@ public class EventBriteService {
 		return "attentees-" + eventId;
 	}
 
+
 	public void eventBriteRequest(WithToken rb, AsyncCharConsumer<Boolean> responseConsumer) {
 
 		String request = rb.build();
 
-		try (CloseableHttpAsyncClient httpclient = HttpAsyncClients.createDefault()) {
-			httpclient.start();
-			Future<Boolean> future = httpclient.execute(HttpAsyncMethods.createGet(request), responseConsumer, null);
-			Boolean result = future.get();
-			if (result != null && result.booleanValue()) {
-				LOGGER.debug("Request successfully executed: " + request);
-			} else {
-				LOGGER.warn("Request failed: " + request);
-			}
-			LOGGER.debug("Shutting down");
-		} catch (IOException | InterruptedException | ExecutionException e) {
-			LOGGER.error(request, e);
-		}
+        HttpClient httpClient = HttpClients.createDefault();
+        httpClient.
+
+
+
 
 	}
 
